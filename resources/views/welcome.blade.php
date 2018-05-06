@@ -2,8 +2,24 @@
 
 @section('content')
     @if (Auth::check())
-        <?php $user = Auth::user(); ?>
-        {{ $user->name }}
+        <div class="row">
+            <aside class="col-md-4">
+                {!! Form::open(['route' => 'tasks.store']) !!}
+                    <div class="form-group">
+                        <p>タスク内容</p>
+                        {!! Form::textarea('content', old('content'), ['class' => 'form-control', 'rows' => '1']) !!}
+                        <p>ステータス</p>
+                        {!! Form::textarea('status', old('status'), ['class' => 'form-control', 'rows' => '1']) !!}
+                    </div>
+                    {!! Form::submit('Post', ['class' => 'btn btn-primary btn-block']) !!}
+                {!! Form::close() !!}
+            </aside>
+            <div class="col-xs-8">
+                @if (count($tasks) > 0)
+                    @include('tasks.tasks', ['tasks' => $tasks])
+                @endif
+            </div>
+        </div>
     @else
         <div class="center jumbotron">
             <div class="text-center">
