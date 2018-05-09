@@ -72,10 +72,16 @@ class TasksController extends Controller
     {
         $task = Task::find($id);
 
-        return view('tasks.show', [
-            'task' => $task,
-        ]);    }
-
+        if(\Auth::user()->id === $task->user_id){
+    
+            return view('tasks.show', [
+                'task' => $task,
+            ]);
+        }
+        else{
+        return redirect('/');
+        }
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -86,10 +92,16 @@ class TasksController extends Controller
     {
         $task = Task::find($id);
 
-        return view('tasks.edit', [
-            'task' => $task,
-        ]);
+        if(\Auth::user()->id === $task->user_id){
+            return view('tasks.edit', [
+                'task' => $task,
+            ]);
+            return redirect('/');
+        }
 
+        else{
+        return redirect('/');
+        }
     }
 
     /**
@@ -106,10 +118,22 @@ class TasksController extends Controller
             'status'=>'required|max:10'
             ]);
 
-        $message = Task::find($id);
-        $message->content = $request->content;
-        $message->status = $request->status;
-        $message->save();
+        $task = Task::find($id);
+
+        if(\Auth::user()->id === $task->user_id){
+
+            $task->content = $request->content;
+            $task->status = $request->status;
+            $task->save();
+
+            return redirect('/');
+
+        }
+        else{
+        return redirect('/');
+        }
+    }
+
 
 /*
         $request->user()->tasks()->update([
@@ -117,10 +141,6 @@ class TasksController extends Controller
             'status' => $request->status,
         ]);
 */
-
-        return redirect('/');
-
-    }
 
     /**
      * Remove the specified resource from storage.
